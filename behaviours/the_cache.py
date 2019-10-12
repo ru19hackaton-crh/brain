@@ -6,7 +6,7 @@ from py_trees.common import Status
 class FindTheLineBehaviour(py_trees.behaviour.Behaviour):
     def __init__(self, name="Find The Line"):
         super().__init__(name)
-        self.blackboard.register_key("cache_linemet", read=True)
+        self.blackboard.register_key("colour", read=True)
         self.previous_command_sent = None
 
     def setup(self, timeout, brain=None):
@@ -15,7 +15,7 @@ class FindTheLineBehaviour(py_trees.behaviour.Behaviour):
         return True
 
     def update(self):
-        if not self.blackboard.cache_linemet:
+        if self.blackboard.colour != 79:
             new_command = "DRIVE:[\"up\"]"
             if new_command != self.previous_command_sent:
                 self.previous_command_sent = new_command

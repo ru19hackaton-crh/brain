@@ -49,7 +49,7 @@ def create_automation_subtree(brain):
     return automation
 
 def create_tree(brain):
-    root = py_trees.composites.Selector(name="POC root")
+    root = py_trees.composites.Selector(name="RU19 Logic")
     manual = create_manual_subtree(brain)
     automation = create_automation_subtree(brain)
     root.add_children([manual, automation])
