@@ -34,7 +34,7 @@ class ManualDriveBehaviour(py_trees.behaviour.Behaviour):
             self.brain.robot.write_message(f"COMMAND: {new_command}")
             return Status.SUCCESS
         else:
-            return py_trees.common.Status.INVALID
+            return Status.FAILURE
 
     def terminate(self, new_status):
         pass

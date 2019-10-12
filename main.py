@@ -12,14 +12,7 @@ enable_pretty_logging()
 
 import json
 
-from behaviours.manual_drive import ManualDriveBehaviour
-
-def create_tree(brain):
-    root = py_trees.composites.Selector(name="POC root")
-    manual = ManualDriveBehaviour()
-    manual.setup(0, brain)
-    root.add_children([manual])
-    return root
+from behaviours import create_tree
 
 class Brain:
     def __init__(self):
@@ -29,10 +22,12 @@ class Brain:
         self.tree = create_tree(self)
         self.behaviour_tree = py_trees.trees.BehaviourTree(self.tree)
 
-        self.bb = BlackboardClient(name="Brain", write={"manual", "keys", "robot_response"})
+        self.bb = BlackboardClient(name="Brain", write={"manual", "keys", "robot_response", "command", "started"})
         self.bb.manual = False
         self.bb.keys = set()
         self.bb.robot_response = None
+        self.bb.command = None
+        self.bb.started = False
 
     def operate(self):
         if not self.monitor:
@@ -83,6 +78,8 @@ class Brain:
         elif message.endswith("down"):
             key = message.split(" ")[0]
             self.bb.keys.add(key)
+        elif message == "followline":
+            self.bb.command = "followline"
         else:
             self.monitor.write_message(f"message: {message}")
         return
