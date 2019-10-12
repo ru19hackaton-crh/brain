@@ -57,7 +57,7 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
                 self.previous_direction = direction
                 self.iters = 0
 
-            if self.iters > 300:
+            if self.iters > 200:
                 new_command = f"TURN:{direction}"
             else:
                 new_command = f"LINE:{direction}"
@@ -65,6 +65,7 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
             if self.previous_command_sent != new_command:
                 self.previous_command_sent = new_command
                 self.brain.robot.write_message(f"COMMAND: {new_command}")
+                self.brain.monitor.write_message(f"ROBOT:{new_command}")
             return Status.RUNNING
         return Status.FAILURE
 
