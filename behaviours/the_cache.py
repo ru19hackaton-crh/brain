@@ -3,6 +3,8 @@
 import py_trees
 from py_trees.common import Status
 
+import json
+
 class FindTheLineBehaviour(py_trees.behaviour.Behaviour):
     def __init__(self, name="Find The Line"):
         super().__init__(name)
@@ -43,9 +45,10 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
 
     def update(self):
         if self.blackboard.colour and abs(self.blackboard.colour - 20) < 2:
-            new_command = "DRIVE:[\"up\"]"
+            directions = ["up", "right"]
         else:
-            new_command = "FINDLINE"
+            directions = ["up", "left"]
+        new_command = f"DRIVE:{json.dumps(directions)}"
         if new_command != self.previous_command_sent:
             self.previous_command_sent = new_command
             self.brain.robot.write_message(f"COMMAND: {new_command}")
