@@ -65,6 +65,7 @@ class SearchTheWhiteBehaviour(py_trees.behaviour.Behaviour):
     def __init__(self, name="Search the white"):
         super().__init__(name)
         self.blackboard.register_key("colour", read=True)
+        self.iter = 0
 
     def setup(self, timeout, brain=None):
         if brain:
@@ -77,12 +78,15 @@ class SearchTheWhiteBehaviour(py_trees.behaviour.Behaviour):
                 return Status.SUCCESS
             else:
                 return Status.FAILURE
-        if self.status != Status.RUNNING:
+        if self.status != Status.RUNNING or self.iter > 200:
+            self.iter = 0
             self.brain.robot.write_message("COMMAND: FIND_WHITE")
+        self.iter += 1
         return Status.RUNNING
 
     def terminate(self, new_status):
         if new_status == Status.SUCCESS:
+            self.iter = 0
             self.brain.robot.write_message("COMMAND: STOP")
 
 def create_the_cache_subtree(brain):
