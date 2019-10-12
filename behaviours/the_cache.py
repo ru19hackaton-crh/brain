@@ -9,7 +9,7 @@ def colour_is_whitish(colour):
     return abs(colour - 20) < 5
 
 def colour_is_yellow(colour):
-    return abs(colour - 79) < 5
+    return abs(colour - 14) < 2
 
 class FindTheLineBehaviour(py_trees.behaviour.Behaviour):
     def __init__(self, name="Find The Line"):
@@ -66,7 +66,7 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
                 self.previous_direction = direction
                 self.iters = 0
 
-            if self.iters > 200:
+            if self.iters > 180:
                 new_command = f"TURN:{direction}"
             else:
                 new_command = f"LINE:{direction}"
