@@ -35,10 +35,12 @@ class Brain:
         self.bb.robot_response = None
 
     def operate(self):
+        if not self.monitor:
+            return
         py_trees.blackboard.Blackboard.enable_activity_stream(maximum_size=100)
         self.behaviour_tree.tick()
-        logging.info(py_trees.display.ascii_tree(self.tree, show_status=True))
-        logging.info(py_trees.display.unicode_blackboard_activity_stream())
+        self.monitor.write_message(f"TREE:{py_trees.display.ascii_tree(self.tree, show_status=True)}")
+        self.monitor.write_message(f"ACTIVITY:{py_trees.display.unicode_blackboard_activity_stream()}")
         py_trees.blackboard.Blackboard.activity_stream.clear()
 
     @property
@@ -104,7 +106,6 @@ class MonitorHandler(CommonBrainHandler):
         self.brain.monitor = self
 
     def on_message(self, message):
-        logging.info(f"Monitor: {message}")
         self.brain.parse_monitor(message)
 
 class RobotHandler(CommonBrainHandler):
@@ -112,7 +113,6 @@ class RobotHandler(CommonBrainHandler):
         self.brain.robot = self
 
     def on_message(self, message):
-        logging.info(f"Robot: {message}")
         self.brain.parse_robot(message)
 
 
