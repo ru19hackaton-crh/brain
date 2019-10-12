@@ -68,7 +68,7 @@ class Brain:
         if message == "DONE":
             self.bb.robot_response = True
         elif message.startswith("COLOUR"):
-            self.bb.colour = message.replace("COLOUR:","")
+            self.bb.colour = int(message.replace("COLOUR:",""))
         else:
             self.robot.write_message(u"Robot said: %s" % message)
 

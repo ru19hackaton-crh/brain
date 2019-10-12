@@ -15,18 +15,19 @@ class FindTheLineBehaviour(py_trees.behaviour.Behaviour):
         return True
 
     def update(self):
-        if self.blackboard.colour != 79:
+        if self.blackboard.colour and abs(self.blackboard.colour - 20) < 2:
+            new_command = "STOP"
+            self.brain.robot.write_message(f"COMMAND: {new_command}")
+            return Status.SUCCESS
+        else:
             new_command = "DRIVE:[\"up\"]"
             if new_command != self.previous_command_sent:
                 self.previous_command_sent = new_command
                 self.brain.robot.write_message(f"COMMAND: {new_command}")
             return Status.RUNNING
-        else:
-            new_command = "STOP"
-            self.brain.robot.write_message(f"COMMAND: {new_command}")
-            return Status.SUCCESS
 
     def terminate(self, new_status):
+        self.previous_command_sent = None
         pass
 
 class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
@@ -39,7 +40,7 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
         return True
 
     def update(self):
-        return Status.FAILURE
+        return Status.RUNNING
 
     def terminate(self, new_status):
         pass
