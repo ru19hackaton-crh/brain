@@ -33,6 +33,8 @@ class FindTheLineBehaviour(py_trees.behaviour.Behaviour):
 class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
     def __init__(self, name="Follow The Line 1"):
         super().__init__(name)
+        self.blackboard.register_key("colour", read=True)
+        self.previous_command_sent = None
 
     def setup(self, timeout, brain=None):
         if brain:
@@ -40,6 +42,13 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
         return True
 
     def update(self):
+        if self.blackboard.colour and abs(self.blackboard.colour - 20) < 2:
+            new_command = "DRIVE:[\"up\"]"
+        else:
+            new_command = "FINDLINE"
+        if new_command != self.previous_command_sent:
+            self.previous_command_sent = new_command
+            self.brain.robot.write_message(f"COMMAND: {new_command}")
         return Status.RUNNING
 
     def terminate(self, new_status):
@@ -55,7 +64,7 @@ class TakeShortcutBehaviour(py_trees.behaviour.Behaviour):
         return True
 
     def update(self):
-        return Status.FAILURE
+        return Status.RUNNING
 
     def terminate(self, new_status):
         pass
