@@ -22,13 +22,14 @@ class Brain:
         self.tree = create_tree(self)
         self.behaviour_tree = py_trees.trees.BehaviourTree(self.tree)
 
-        self.bb = BlackboardClient(name="Brain", write={"manual", "keys", "robot_response", "command", "started", "cache_linemet"})
+        self.bb = BlackboardClient(name="Brain", write={"manual", "keys", "robot_response", "command", "started", "cache_linemet", "colour"})
         self.bb.manual = False
         self.bb.keys = set()
         self.bb.robot_response = None
         self.bb.command = None
         self.bb.started = False
         self.bb.cache_linemet = False
+        self.bb.colour = None
 
     def operate(self):
         if not self.monitor:
@@ -37,6 +38,7 @@ class Brain:
         self.behaviour_tree.tick()
         self.monitor.write_message(f"TREE:{py_trees.display.xhtml_tree(self.tree, show_status=True)}")
         self.monitor.write_message(f"ACTIVITY:{py_trees.display.unicode_blackboard_activity_stream()}")
+        self.monitor.write_message(f"COLOUR:{self.bb.colour}")
         py_trees.blackboard.Blackboard.activity_stream.clear()
 
     @property
@@ -65,6 +67,8 @@ class Brain:
     def parse_robot(self, message):
         if message == "DONE":
             self.bb.robot_response = True
+        elif message.startswith("COLOUR"):
+            self.bb.colour = message.replace("COLOUR:","")
         else:
             self.robot.write_message(u"Robot said: %s" % message)
 
