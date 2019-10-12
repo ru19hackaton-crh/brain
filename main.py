@@ -15,6 +15,7 @@ class ManualDriveBehaviour(py_trees.behaviour.Behaviour):
         super().__init__(name)
         self.blackboard.register_key("manual", read=True)
         self.blackboard.register_key("keys", read=True)
+        self.previous_command_sent = None
 
     def setup(self, timeout, brain=None):
         if brain:
@@ -27,11 +28,13 @@ class ManualDriveBehaviour(py_trees.behaviour.Behaviour):
                 new_command = f"DRIVE:{self.blackboard.keys}"
             else:
                 new_command = "STOP"
-            self.brain.robot.write_message(f"COMMAND: {new_command}")
+            if new_command != self.previous_command_sent:
+                self.previous_command_sent = new_command
+                self.brain.robot.write_message(f"COMMAND: {new_command}")
             return Status.RUNNING
         elif self.status == Status.RUNNING:
             # inform robot that manual is off
-            new_command = "STOP"
+            new_command = "IDLE"
             self.brain.robot.write_message(f"COMMAND: {new_command}")
             return Status.SUCCESS
         else:
