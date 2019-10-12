@@ -57,7 +57,7 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
                 self.previous_direction = direction
                 self.iters = 0
 
-            if self.iters > 100:
+            if self.iters > 300:
                 new_command = f"TURN:{direction}"
             else:
                 new_command = f"LINE:{direction}"
