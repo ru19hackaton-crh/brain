@@ -10,6 +10,8 @@ import tornado.ioloop
 from tornado.log import enable_pretty_logging
 enable_pretty_logging()
 
+import json
+
 class ManualDriveBehaviour(py_trees.behaviour.Behaviour):
     def __init__(self, name="Manual Drive"):
         super().__init__(name)
@@ -25,7 +27,7 @@ class ManualDriveBehaviour(py_trees.behaviour.Behaviour):
     def update(self):
         if self.blackboard.manual:
             if self.blackboard.keys:
-                new_command = f"DRIVE:{self.blackboard.keys}"
+                new_command = f"DRIVE:{json.dumps(list(self.blackboard.keys))}"
             else:
                 new_command = "STOP"
             if new_command != self.previous_command_sent:
