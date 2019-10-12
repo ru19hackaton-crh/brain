@@ -39,7 +39,7 @@ class Brain:
             return
         py_trees.blackboard.Blackboard.enable_activity_stream(maximum_size=100)
         self.behaviour_tree.tick()
-        self.monitor.write_message(f"TREE:{py_trees.display.ascii_tree(self.tree, show_status=True)}")
+        self.monitor.write_message(f"TREE:{py_trees.display.xhtml_tree(self.tree, show_status=True)}")
         self.monitor.write_message(f"ACTIVITY:{py_trees.display.unicode_blackboard_activity_stream()}")
         py_trees.blackboard.Blackboard.activity_stream.clear()
 
