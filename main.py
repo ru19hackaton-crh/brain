@@ -145,7 +145,7 @@ class RobotHandler(CommonBrainHandler):
 if __name__ == "__main__":
     brain = Brain()
 
-    brain_operating = tornado.ioloop.PeriodicCallback(brain.operate, 10)
+    brain_operating = tornado.ioloop.PeriodicCallback(brain.operate, 100)
     application = tornado.web.Application([
         (r"/monitor", MonitorHandler, dict(brain=brain)),
         (r"/robot", RobotHandler, dict(brain=brain)),
