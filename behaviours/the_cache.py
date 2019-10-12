@@ -17,7 +17,7 @@ class FindTheLineBehaviour(py_trees.behaviour.Behaviour):
         return True
 
     def update(self):
-        if self.blackboard.colour and abs(self.blackboard.colour - 20) < 2:
+        if self.blackboard.colour and abs(self.blackboard.colour - 20) < 5:
             new_command = "STOP"
             self.brain.robot.write_message(f"COMMAND: {new_command}")
             return Status.SUCCESS
@@ -37,6 +37,8 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
         super().__init__(name)
         self.blackboard.register_key("colour", read=True)
         self.previous_command_sent = None
+        self.previous_direction = None
+        self.iters = 0
 
     def setup(self, timeout, brain=None):
         if brain:
@@ -45,12 +47,22 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
 
     def update(self):
         if self.blackboard.colour:
-            if abs(self.blackboard.colour - 20) < 2:
+            if abs(self.blackboard.colour - 20) < 5:
                 direction = "right"
             else:
                 direction = "left"
-            new_command = f"LINE:{direction}"
-            if new_command != self.previous_command_sent:
+            if self.previous_direction == direction:
+                self.iters += 1
+            else:
+                self.previous_direction = direction
+                self.iters = 0
+
+            if self.iters > 100:
+                new_command = f"TURN:{direction}"
+            else:
+                new_command = f"LINE:{direction}"
+
+            if self.previous_command_sent != new_command:
                 self.previous_command_sent = new_command
                 self.brain.robot.write_message(f"COMMAND: {new_command}")
             return Status.RUNNING
