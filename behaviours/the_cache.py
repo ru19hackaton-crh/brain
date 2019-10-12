@@ -44,15 +44,17 @@ class FollowTheLine1Behaviour(py_trees.behaviour.Behaviour):
         return True
 
     def update(self):
-        if self.blackboard.colour and abs(self.blackboard.colour - 20) < 2:
-            directions = ["up", "right"]
-        else:
-            directions = ["up", "left"]
-        new_command = f"DRIVE:{json.dumps(directions)}"
-        if new_command != self.previous_command_sent:
-            self.previous_command_sent = new_command
-            self.brain.robot.write_message(f"COMMAND: {new_command}")
-        return Status.RUNNING
+        if self.blackboard.colour:
+            if abs(self.blackboard.colour - 20) < 2:
+                direction = "right"
+            else:
+                direction = "left"
+            new_command = f"LINE:{direction}"
+            if new_command != self.previous_command_sent:
+                self.previous_command_sent = new_command
+                self.brain.robot.write_message(f"COMMAND: {new_command}")
+            return Status.RUNNING
+        return Status.FAILURE
 
     def terminate(self, new_status):
         pass
