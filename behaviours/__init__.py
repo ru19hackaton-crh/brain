@@ -4,6 +4,12 @@ import py_trees
 from py_trees.common import Status
 
 from .manual_drive import ManualDriveBehaviour
+from .the_cache import create_the_cache_subtree
+from .the_calibrator import create_the_calibrator_subtree
+from .the_monolith import create_the_monolith_subtree
+from .the_root import create_the_root_subtree
+from .tricentrifuge import create_tricentrifuge_subtree
+from .the_terminal import create_the_terminal_subtree
 
 class StartingBehaviour(py_trees.behaviour.Behaviour):
     def __init__(self, name="Started"):
@@ -33,7 +39,13 @@ def create_automation_subtree(brain):
     automation = py_trees.composites.Sequence("Automation")
     starting = StartingBehaviour()
     starting.setup(0, brain)
-    automation.add_children([starting])
+    the_cache = create_the_cache_subtree(brain)
+    the_calibrator = create_the_calibrator_subtree(brain)
+    the_monolith = create_the_monolith_subtree(brain)
+    the_root = create_the_root_subtree(brain)
+    tricentrifuge = create_tricentrifuge_subtree(brain)
+    the_terminal = create_the_terminal_subtree(brain)
+    automation.add_children([starting, the_cache, the_calibrator, the_monolith, the_root, tricentrifuge, the_terminal])
     return automation
 
 def create_tree(brain):
