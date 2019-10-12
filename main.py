@@ -22,12 +22,13 @@ class Brain:
         self.tree = create_tree(self)
         self.behaviour_tree = py_trees.trees.BehaviourTree(self.tree)
 
-        self.bb = BlackboardClient(name="Brain", write={"manual", "keys", "robot_response", "command", "started"})
+        self.bb = BlackboardClient(name="Brain", write={"manual", "keys", "robot_response", "command", "started", "cache_linemet"})
         self.bb.manual = False
         self.bb.keys = set()
         self.bb.robot_response = None
         self.bb.command = None
         self.bb.started = False
+        self.bb.cache_linemet = False
 
     def operate(self):
         if not self.monitor:
