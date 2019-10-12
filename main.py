@@ -80,6 +80,8 @@ class Brain:
             self.bb.keys.add(key)
         elif message == "followline":
             self.bb.command = "followline"
+        elif message == "start":
+            self.bb.started = True
         else:
             self.monitor.write_message(f"message: {message}")
         return
