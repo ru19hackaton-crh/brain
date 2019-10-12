@@ -112,12 +112,18 @@ class MonitorHandler(CommonBrainHandler):
     def on_message(self, message):
         self.brain.parse_monitor(message)
 
+    def on_close(self):
+        self.brain.monitor = None
+
 class RobotHandler(CommonBrainHandler):
     def open(self):
         self.brain.robot = self
 
     def on_message(self, message):
         self.brain.parse_robot(message)
+
+    def on_close(self):
+        self.brain.robot = None
 
 
 if __name__ == "__main__":
